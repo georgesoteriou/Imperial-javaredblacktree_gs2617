@@ -78,18 +78,27 @@ public final class Node<K extends Comparable<? super K>, V> {
   }
 
   public Node<K, V> rotateRight() {
-    // TODO: Part I
-    throw new RuntimeException("TODO: Implement rotateRight");
+    Node<K,V> left = getLeft();
+    setLeft(left.getRight());
+    reparent(left);
+    left.setRight(this);
+    return left;
   }
 
   public Node<K, V> rotateLeft() {
-    // TODO: Part I
-    throw new RuntimeException("TODO: Implement rotateLeft");
+    Node<K,V> right = getRight();
+    setRight(right.getLeft());
+    reparent(right);
+    right.setLeft(this);
+    return right;
   }
 
   private void reparent(Node<K, V> replacement) {
-    // TODO: Part I
-    throw new RuntimeException("TODO: Implement reparent");
+    if(isLeftChild()){
+      getParent().setLeft(replacement);
+    }else if(isRightChild()){
+      getParent().setRight(replacement);
+    }
   }
 
   /* Colour operations */

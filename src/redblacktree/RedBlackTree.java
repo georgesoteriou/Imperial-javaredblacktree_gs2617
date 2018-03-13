@@ -45,23 +45,57 @@ public class RedBlackTree<K extends Comparable<? super K>, V> {
   }
 
   private void insertCaseOne(Node<K, V> current) {
-    throw new RuntimeException("TODO: implement insertion case 1");
+    if(current.getParent() == null){
+      current.setBlack();
+    }else{
+      insertCaseTwo(current);
+    }
   }
 
   private void insertCaseTwo(Node<K, V> current) {
-    throw new RuntimeException("TODO: implement insertion case 2");
+    if(current.getParent().isRed()){
+      insertCaseThree(current);
+    }
   }
 
   private void insertCaseThree(Node<K, V> current) {
-    throw new RuntimeException("TODO: implement insertion case 3");
+    if(current.getUncle() != null && current.getUncle().isRed()){
+      current.getParent().setBlack();
+      current.getUncle().setBlack();
+      current.getGrandparent().setRed();
+      insertCaseOne(current.getGrandparent());
+    }else{
+      insertCaseFour(current);
+    }
   }
 
   private void insertCaseFour(Node<K, V> current) {
-    throw new RuntimeException("TODO: implement insertion case 4");
+    Node<K,V> parent = current.getParent();
+    if(parent.isLeftChild() && current.isRightChild()){
+      parent.rotateLeft();
+      insertCaseFive(parent);
+    }else if (parent.isRightChild() && current.isLeftChild()){
+      parent.rotateRight();
+      insertCaseFive(parent);
+    }else{
+      insertCaseFive(current);
+    }
   }
 
   private void insertCaseFive(Node<K, V> current) {
-    throw new RuntimeException("TODO: implement insertion case 5");
+    current.getParent().setBlack();
+    current.getGrandparent().setRed();
+    Node<K,V> newGrandparent;
+    if(current.isLeftChild()){
+      newGrandparent = current.getGrandparent().rotateRight();
+    }else{
+      newGrandparent = current.getGrandparent().rotateLeft();
+    }
+    if(newGrandparent.getParent() == null){
+      root = newGrandparent;
+    }
+
+
   }
 
   private Tuple<Node<K, V>, Node<K, V>> findNode(K key) {
