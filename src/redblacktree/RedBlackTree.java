@@ -1,8 +1,9 @@
 package redblacktree;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class RedBlackTree<K extends Comparable<? super K>, V> {
+public class RedBlackTree<K extends Comparable<? super K>, V> implements Iterable<Tuple<K,V>>{
 
   Node<K, V> root;
 
@@ -140,4 +141,43 @@ public class RedBlackTree<K extends Comparable<? super K>, V> {
     return "RBT " + root + " ";
   }
 
+  @Override
+  public Iterator<Tuple<K, V>> iterator() {
+    Node<K,V> current = root;
+
+    while (current.getLeft() != null){
+      current = current.getLeft();
+    }
+    Node<K, V> finalCurrent = current;
+    return new Iterator<Tuple<K, V>>() {
+
+      Node<K, V> current = finalCurrent;
+
+      @Override
+      public boolean hasNext() {
+        if(current.isLeftChild() && current.getParent() != null){
+          return true;
+        }else if(current.isRightChild() && current.getGrandparent() != null){
+          return true;
+        }else{
+          return false;
+        }
+      }
+
+      @Override
+      public Tuple<K, V> next() {
+        if(current.isLeftChild() && current.getParent() != null){
+          current = current.getParent();
+          return new Tuple<>(current.getKey(), current.getValue());
+        }else if(current.isRightChild() && current.getGrandparent() != null){
+          current = current.getGrandparent();
+          return new Tuple<>(current.getKey(), current.getValue());
+        }else {
+          //TODO
+          return new Tuple<>(current.getKey(), current.getValue());;
+        }
+      }
+
+    }
+  }
 }
